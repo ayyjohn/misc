@@ -21,8 +21,10 @@ while True:
         print "\nYour search matches a lot of pages. Choose one of the below" + "terms or enter 'u' to show the urban dictionary definition:\n"
         for i in e.options:
             print i.encode('utf8')
+        temp = word
         word = raw_input()
         if word == 'u':
+            word = temp
             print_urbandict = True
             break
     except wikipedia.exceptions.PageError as e:
