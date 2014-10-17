@@ -1,0 +1,41 @@
+#!/usr/bin/env python2
+
+import wikipedia, urbandict
+import sys, os
+
+word = " ".join(sys.argv[1:])
+print_urbandict = False
+
+
+(height, width) = [int(x, 10) for x in os.popen('stty size', 'r').read().split()]
+
+while True: 
+    try:
+        wiki_summary = wikipedia.summary(word, sentences=3)
+        print "Wikipedia Definition:"
+        print "="*len("Wikipedia Definition:") + "\n"
+        print wiki_summary.encode('utf8')
+        print
+        break
+    except wikipedia.exceptions.DisambiguationError as e:
+        print "\nYour search matches a lot of pages. Choose one of the below" + "terms or enter 'u' to show the urban dictionary definition:\n"
+        for i in e.options:
+            print i.encode('utf8')
+        word = raw_input()
+        if word == 'u':
+            print_urbandict = True
+            break
+    except wikipedia.exceptions.PageError as e:
+        print "No such entry on Wikpedia"
+        print_urbandict = True
+
+
+if print_urbandict:
+    print "\nUrban Dictionary definition:"
+    print "="*len("Urban Dicttionary definition:") + "\n"
+
+    u = urbandict.define(word)
+
+    for i in range(0, len(u)):
+        print "Definition " + str(i+1) + ": " + u[i]['def']
+        print "Example " + str(i+1) + ": " + u[i]['example']
